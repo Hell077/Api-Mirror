@@ -1,7 +1,20 @@
-DOCUMENTATION
-* [ru](docs/readme-ru.md)
-* [en](docs/readme-en.md)
-* [de](docs/readme-de.md)
+# Api-Mirror
 
+## 📄 DOCUMENTATION
 
+* 🇷🇺 [RU](docs/readme-ru.md)
+* 🇬🇧 [EN](docs/readme-en.md)
+* 🇩🇪 [DE](docs/readme-de.md)
+
+---
+
+## 📜 LICENSE 
+* [MIT License HERE](https://github.com/Hell077/Api-Mirror-/blob/main/LICENSE)
+
+---
+
+## 📥 INSTALLATION
+- [⬇️ CLICK HERE TO DOWNLOAD](https://github.com/Hell077/Api-Mirror-/releases)
+
+---
 
