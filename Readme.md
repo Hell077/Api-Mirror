@@ -1,4 +1,8 @@
 # Api-Mirror
+## What is the-Api-Mirror?
+
+Api - Mirror is a program that helps you create documentation for your API. All you have to do is create a YAML document according to the instructions, and that's it! With Mirror, anyone can launch a local site and test your API.
+
 
 ## 📄 DOCUMENTATION
 
