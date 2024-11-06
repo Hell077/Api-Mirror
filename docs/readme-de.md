@@ -151,7 +151,7 @@ Für detailliertere Anpassungen können zusätzliche Flags verwendet werden. Hie
 
 ## 🔗 Links
 
-- **Releases**: [Laden Sie die neueste Version herunter](https://github.com/Hell077/Api-Mirror/releases)
-- **GitHub-Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror)
+- **Releases**: [Laden Sie die neueste Version herunter](https://github.com/Hell077/Api-Mirror-/releases)
+- **GitHub-Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror-)
 
 
