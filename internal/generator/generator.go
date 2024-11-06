@@ -187,53 +187,56 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 		html += `
 		<script>
 			function sendRequest(address, method, uniqueID) {
-				const paramsForm = document.getElementById('params-' + uniqueID);
-				const fieldsForm = document.getElementById('fields-' + uniqueID);
+    const paramsForm = document.getElementById('params-' + uniqueID);
+    const fieldsForm = document.getElementById('fields-' + uniqueID);
 
-				const paramData = new FormData(paramsForm);
-				let paramObject = {};
-				paramData.forEach((value, key) => {
-					paramObject[key] = value;
-				});
+    const paramData = new FormData(paramsForm);
+    let paramObject = {};
+    paramData.forEach((value, key) => {
+        paramObject[key] = value;
+    });
 
-				let url = address;
-				for (let key in paramObject) {
-					url = url.replace("{" + key + "}", paramObject[key]);
-				}
+    let url = address;
+    for (let key in paramObject) {
+        url = url.replace("{" + key + "}", paramObject[key]);
+    }
 
-				const fieldsData = new FormData(fieldsForm);
-				let bodyObject = {};
-				fieldsData.forEach((value, key) => {
-					bodyObject[key] = value;
-				});
+    const fieldsData = new FormData(fieldsForm);
+    let bodyObject = {};
+    fieldsData.forEach((value, key) => {
+        bodyObject[key] = value;
+    });
 
-				const consoleElement = document.getElementById('console-' + uniqueID);
-				const statusElement = document.createElement('div');
-				statusElement.classList.add('status-output');
-				statusElement.textContent = 'Sending ' + method + ' request to ' + url;
-				consoleElement.appendChild(statusElement);
+    const consoleElement = document.getElementById('console-' + uniqueID);
+    consoleElement.innerHTML = ''; // Очистка консоли перед новым выводом
 
-				fetch(url, {
-					method: method,
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body: method !== "GET" ? JSON.stringify(bodyObject) : null
-				})
-				.then(response => response.json())
-				.then(data => {
-					const successElement = document.createElement('div');
-					successElement.classList.add('status-output');
-					successElement.textContent = 'Response: ' + JSON.stringify(data);
-					consoleElement.appendChild(successElement);
-				})
-				.catch(error => {
-					const errorElement = document.createElement('div');
-					errorElement.classList.add('status-output');
-					errorElement.textContent = 'Error: ' + error.message;
-					consoleElement.appendChild(errorElement);
-				});
-			}
+    const statusElement = document.createElement('div');
+    statusElement.classList.add('status-output');
+    statusElement.textContent = 'Sending ' + method + ' request to ' + url;
+    consoleElement.appendChild(statusElement);
+
+    fetch(url, {
+        method: method,
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: method !== "GET" ? JSON.stringify(bodyObject) : null
+    })
+    .then(response => response.json())
+    .then(data => {
+        const successElement = document.createElement('div');
+        successElement.classList.add('status-output');
+        successElement.textContent = 'Response: ' + JSON.stringify(data);
+        consoleElement.appendChild(successElement);
+    })
+    .catch(error => {
+        const errorElement = document.createElement('div');
+        errorElement.classList.add('status-output');
+        errorElement.textContent = 'Error: ' + error.message;
+        consoleElement.appendChild(errorElement);
+    });
+}
+
 		</script>
 		`
 
