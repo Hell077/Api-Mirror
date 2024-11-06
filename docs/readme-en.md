@@ -119,28 +119,16 @@ Once you add the executable file `Api-Mirror` to your `PATH`, you can run it fro
 Mirror --path "/path/to/config.yaml" --port [optional, a free port will be chosen]
 ```
 
-- `--config` (required): Path to the YAML configuration file.
-    - `--output` (required): Path where the generated HTML documentation will be saved.
+- `--path` (required): Path to the YAML configuration file.
+- `--port` (not required): Select port to run Mirror-Api server
 
 ### Example:
 
 ```bash
-Mirror --config api_config.yaml --output api_documentation.html
+Mirror --path=api_config.yaml --port=8080
 ```
 
-This command will generate HTML documentation based on the configuration file `api_config.yaml` and save it to the file `api_documentation.html`.
-
----
-
-## 🔧 Flag Support
-
-For more detailed customization, you can use additional flags. Here are some useful options:
-
-- `--config <path>`: Path to the YAML configuration file.
-    - `--output <path>`: Path to save the HTML documentation.
-    - `--help`: Show the list of all available flags.
-
----
+This command will generate HTML documentation based on the configuration file `api_config.yaml` and save it to the file `api_documentation.html`
 
 ## 📌 Notes
 
