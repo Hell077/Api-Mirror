@@ -153,5 +153,5 @@ Mirror --config api_config.yaml --output api_documentation.html
 
 ## 🔗 Ссылки
 
-- **Релизы**: [Скачать последнюю версию](https://github.com/Hell077/Api-Mirror/releases)
-- **Репозиторий на GitHub**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror)
+- **Релизы**: [Скачать последнюю версию](https://github.com/Hell077/Api-Mirror-/releases)
+- **Репозиторий на GitHub**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror-)
