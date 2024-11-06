@@ -152,7 +152,7 @@ For more detailed customization, you can use additional flags. Here are some use
 
 ## 🔗 Links
 
-- **Releases**: [Download the latest version](https://github.com/Hell077/Api-Mirror/releases)
-- **GitHub Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror)
+- **Releases**: [Download the latest version](https://github.com/Hell077/Api-Mirror-/releases)
+- **GitHub Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror-)
 
 
