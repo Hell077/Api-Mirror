@@ -102,10 +102,8 @@ Jeder Endpunkt enthält:
     - **Address**: Die URL des API-Endpunkts.
     - **Method**: Die HTTP-Methode (GET, POST usw.).
     - **Fields**: Eingabefelder für den Endpunkt.
-    - **Responses**: Mögliche HTTP-Antworten mit Codes und Beschreibungen
-
-.
-
+    - **Responses**: Mögliche HTTP-Antworten mit Codes und Beschreibungen.
+    - 
 ---
 
 ## 💻 Verwendung
@@ -115,11 +113,11 @@ Jeder Endpunkt enthält:
 Sobald Sie die ausführbare Datei `Api-Mirror` zu Ihrem `PATH` hinzugefügt haben, können Sie sie über die Konsole ausführen. Um die API-Dokumentation zu generieren, verwenden Sie den folgenden Befehl:
 
 ```bash
-Mirror --path "/path/to/config.yaml" --port [optional, ein freier Port wird gewählt]
+Mirror --path=api_config.yaml --port=8080
 ```
 
-- `--config` (erforderlich): Pfad zur YAML-Konfigurationsdatei.
-    - `--output` (erforderlich): Pfad, in dem die generierte HTML-Dokumentation gespeichert wird.
+- ``--path`` (erforderlich): Pfad zur YAML-Konfigurationsdatei.
+- ``--port`` (optional): Wählen Sie den Port aus, auf dem der Spiegel-API-Server ausgeführt werden soll.
 
 ### Beispiel:
 
@@ -128,16 +126,6 @@ Mirror --config api_config.yaml --output api_documentation.html
 ```
 
 Dieser Befehl generiert eine HTML-Dokumentation basierend auf der Konfigurationsdatei `api_config.yaml` und speichert sie in der Datei `api_documentation.html`.
-
----
-
-## 🔧 Flaggen-Unterstützung
-
-Für detailliertere Anpassungen können zusätzliche Flags verwendet werden. Hier sind einige nützliche Optionen:
-
-- `--config <Pfad>`: Pfad zur YAML-Konfigurationsdatei.
-    - `--output <Pfad>`: Pfad, in dem die HTML-Dokumentation gespeichert wird.
-    - `--help`: Zeigt die Liste aller verfügbaren Flags an.
 
 ---
 
