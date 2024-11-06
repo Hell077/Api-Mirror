@@ -24,7 +24,7 @@ Here is the translated documentation in English and German.
 
 ### Step 1: Download the Latest Version
 
-To install **Api-Mirror**, download the latest version from the [GitHub Release](https://github.com/Hell077/Api-Mirror/releases). Go to the link and select the appropriate file for your operating system (Windows, Linux, macOS).
+To install **Api-Mirror**, download the latest version from the [GitHub Release](https://github.com/Hell077/Api-Mirror-/releases). Go to the link and select the appropriate file for your operating system (Windows, Linux, macOS).
 
 ### Step 2: Add to PATH (Windows)
 
