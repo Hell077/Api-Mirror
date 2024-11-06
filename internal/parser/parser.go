@@ -24,7 +24,7 @@ type API struct {
 	Fields     map[string]Field `yaml:"fields"`
 	Responses  map[int]string   `yaml:"responses"`
 	Title      string           `yaml:"title"`
-	Parameters map[string]Param `yaml:"parameters"` // Новое поле для параметров
+	Parameters map[string]Param `yaml:"parameters"`
 }
 
 type Field struct {
@@ -43,14 +43,18 @@ func ParseYAML(filepath string) (*APIConfig, error) {
 		return nil, fmt.Errorf("error reading file: %v", err)
 	}
 
+	// Отладочная печать содержимого файла YAML
 	fmt.Println("YAML file content:\n", string(data))
 
 	var config APIConfig
 	if err := yaml.Unmarshal(data, &config); err != nil {
 		return nil, fmt.Errorf("error parsing YAML: %v", err)
 	}
+
+	// Печать разобранного содержимого YAML для отладки
 	fmt.Printf("Parsed YAML content: %+v\n", config)
 
+	// Валидация конфигурации
 	if err := validateConfig(&config); err != nil {
 		return nil, err
 	}
@@ -59,11 +63,14 @@ func ParseYAML(filepath string) (*APIConfig, error) {
 }
 
 func validateConfig(config *APIConfig) error {
+	// Проверка наличия обязательных данных
 	if config.APIMirror.APIList == nil || len(config.APIMirror.APIList) == 0 {
 		return errors.New("mandatory field API_MIRROR is missing or empty")
 	}
 
+	// Валидация каждого API
 	for name, api := range config.APIMirror.APIList {
+		// Проверка обязательных полей API
 		if api.Address == "" {
 			return fmt.Errorf("API '%s' is missing the mandatory field 'address'", name)
 		}
@@ -76,11 +83,25 @@ func validateConfig(config *APIConfig) error {
 		if api.Title == "" {
 			return fmt.Errorf("API '%s' is missing the mandatory field 'title'", name)
 		}
+
+		// Валидация параметров API
 		if len(api.Parameters) > 0 {
-			// Валидируем параметры, если они есть
 			for paramName, param := range api.Parameters {
 				if param.Type == "" {
 					return fmt.Errorf("API '%s' parameter '%s' is missing 'type'", name, paramName)
+				}
+				// Проверка на наличие плейсхолдера в параметре, если он предусмотрен
+				if param.Placeholder == "" {
+					return fmt.Errorf("API '%s' parameter '%s' is missing 'placeholder'", name, paramName)
+				}
+			}
+		}
+
+		// Валидация полей API
+		if len(api.Fields) > 0 {
+			for fieldName, field := range api.Fields {
+				if field.Type == "" {
+					return fmt.Errorf("API '%s' field '%s' is missing 'type'", name, fieldName)
 				}
 			}
 		}

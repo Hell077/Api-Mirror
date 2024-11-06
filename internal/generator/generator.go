@@ -13,7 +13,6 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 	}
 	defer file.Close()
 
-	// Формируем базовый URL на основе SERVER и PORT из YAML
 	baseURL := fmt.Sprintf("http://%s:%s", config.APIMirror.SERVER, config.APIMirror.PORT)
 
 	html := `<!DOCTYPE html>
@@ -25,90 +24,115 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f9fc;
+            margin: 20px;
+            background-color: #f9f9f9;
             color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
         }
         h1 {
-            color: #2c3e50;
-            font-size: 2em;
-            margin-bottom: 1em;
+            color: #444;
             text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+            font-weight: 700;
         }
         .api-container {
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            margin-bottom: 20px;
-            transition: box-shadow 0.3s ease;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+            position: relative;
         }
-        .api-container:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        .api-details {
+            width: 65%;
+            padding-right: 20px;
         }
         .api-title {
-            font-size: 1.75em;
-            color: #34495e;
-            margin-bottom: 0.5em;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
         }
         .api-address, .api-method {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #7f8c8d;
+        }
+        .api-form li {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+        .api-form label {
+            display: block;
             font-weight: bold;
-            color: #16a085;
-            margin-top: 0.5em;
-        }
-        .response-statuses {
-            margin-top: 1em;
-        }
-        .response-statuses strong {
-            font-size: 1.1em;
             color: #34495e;
+            font-size: 14px;
         }
-        .response-status {
-            font-size: 0.95em;
-            margin-left: 10px;
-            color: #2980b9;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 5px 0;
-        }
-        .api-form input {
-            padding: 5px;
-            margin: 5px;
+        .api-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: #fafafa;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
         }
-        .api-form button {
-            background-color: #2980b9;
-            color: white;
+        .api-form input[type="text"]:focus {
+            border-color: #3498db;
+        }
+        .api-button {
+            padding: 12px 20px;
+            color: #fff;
+            background-color: #3498db;
             border: none;
-            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
         }
-        .api-form button:hover {
-            background-color: #3498db;
+        .api-button:hover {
+            background-color: #2980b9;
+        }
+        .response-statuses {
+            margin-top: 20px;
+        }
+        .response-statuses ul {
+            padding-left: 20px;
+        }
+        .response-status {
+            font-size: 14px;
+            display: inline-block;
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #ecf0f1;
+            border-radius: 3px;
+            color: #34495e;
         }
         .console-output {
-            background-color: #2d3436;
-            color: #ecf0f1;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            height: 150px;
-            overflow-y: auto;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            font-family: Consolas, monospace;
             white-space: pre-wrap;
+            font-size: 14px;
+            min-height: 180px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            margin-left: 20px;
         }
         .status-output {
-            font-size: 1.2em;
-            margin-top: 10px;
+            color: #ffcc00;
             font-weight: bold;
+            margin-top: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -116,90 +140,113 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 <h1>API Documentation</h1>
 `
 
-	// Перебираем список API из конфигурации
-	for _, api := range config.APIMirror.APIList {
+	for index, api := range config.APIMirror.APIList {
+		uniqueID := fmt.Sprintf("%s-%d", api.Title, index)
+
 		html += `<div class="api-container">`
+		html += `<div class="api-details">`
 		html += fmt.Sprintf(`<div class="api-title">%s</div>`, api.Title)
 		html += fmt.Sprintf(`<div class="api-address">Address: %s</div>`, api.Address)
 		html += fmt.Sprintf(`<div class="api-method">Method: %s</div>`, api.Method)
 
-		// Для параметров пути, таких как {user_id}, добавляем поле ввода
 		if len(api.Parameters) > 0 {
-			html += `<div class="api-form"><strong>Parameters:</strong><form id="params-` + api.Title + `">`
-			for param, details := range api.Parameters {
-				html += fmt.Sprintf(` 
-					<li><label for="%s">%s:</label>
-					<input type="text" id="%s" name="%s" value="%s" placeholder="%s" /></li>`,
-					param, param, param, param, details.Placeholder, details.Placeholder)
+			html += `<div class="api-form"><strong>Parameters (in URL):</strong><form id="params-` + uniqueID + `">`
+			for paramName, param := range api.Parameters {
+				html += fmt.Sprintf(`
+        <li><label for="%s">%s:</label></li>
+        <li><label for="%s">Type: %s</label></li>
+        <input type="text" id="%s" name="%s" placeholder="Enter %s" /></li>
+        `, paramName, paramName, paramName, param.Type, paramName, paramName, paramName)
 			}
-			html += fmt.Sprintf(`</form>`)
+			html += `</form></div>`
 		}
 
-		html += fmt.Sprintf(`<button type="button" onclick="sendRequest('%s', '%s', '%s')">Send Request</button>`, baseURL+api.Address, api.Method, api.Title)
+		if len(api.Fields) > 0 {
+			html += `<div class="api-form"><strong>Fields (in body):</strong><form id="fields-` + uniqueID + `">`
+			for fieldName, field := range api.Fields {
+				html += fmt.Sprintf(`
+        <li><label for="%s">%s:</label></li>
+        <li><label for="%s">Type: %s</label></li>
+        <input type="text" id="%s" name="%s" placeholder="Enter %s" /></li>
+        `, fieldName, fieldName, fieldName, field.Type, fieldName, fieldName, fieldName)
+			}
+			html += `</form></div>`
+		}
+
+		html += fmt.Sprintf(`<button class="api-button" type="button" onclick="sendRequest('%s', '%s', '%s')">Send Request</button>`, baseURL+api.Address, api.Method, uniqueID)
 
 		html += `<div class="response-statuses"><strong>Response Statuses:</strong><ul>`
 		for status, response := range api.Responses {
 			html += fmt.Sprintf(`<li><span class="response-status">%d: %s</span></li>`, status, response)
 		}
 		html += `</ul></div>`
+		html += `</div>`
 
-		html += fmt.Sprintf(`<div class="status-output" id="status-%s">Status: Awaiting Response</div>`, api.Title)
+		html += fmt.Sprintf(`<div class="console-output" id="console-%s">Console Output</div>`, uniqueID)
 
-		html += fmt.Sprintf(`<div class="console-output" id="console-%s"></div>`, api.Title)
-
-		html += `	
+		html += `
 		<script>
-			function sendRequest(address, method, title) {
-				// Получаем форму по уникальному id
-				const form = document.getElementById('params-' + title);
-				const formData = new FormData(form);
-				let data = {};
-				formData.forEach((value, key) => {
-					data[key] = value;
+			function sendRequest(address, method, uniqueID) {
+				const paramsForm = document.getElementById('params-' + uniqueID);
+				const fieldsForm = document.getElementById('fields-' + uniqueID);
+
+				const paramData = new FormData(paramsForm);
+				let paramObject = {};
+				paramData.forEach((value, key) => {
+					paramObject[key] = value;
 				});
-				
-				// Очистка консоли перед новым запросом
-				const consoleElement = document.getElementById('console-' + title);
-				const statusElement = document.getElementById('status-' + title);
-				consoleElement.textContent = 'Sending request...';
-				statusElement.textContent = 'Status: Sending...';
-				
-				// Отправка запроса
-				fetch(address, {
+
+				let url = address;
+				for (let key in paramObject) {
+					url = url.replace("{" + key + "}", paramObject[key]);
+				}
+
+				const fieldsData = new FormData(fieldsForm);
+				let bodyObject = {};
+				fieldsData.forEach((value, key) => {
+					bodyObject[key] = value;
+				});
+
+				const consoleElement = document.getElementById('console-' + uniqueID);
+				const statusElement = document.createElement('div');
+				statusElement.classList.add('status-output');
+				statusElement.textContent = 'Sending ' + method + ' request to ' + url;
+				consoleElement.appendChild(statusElement);
+
+				fetch(url, {
 					method: method,
 					headers: {
-						'Content-Type': 'application/json'
+						"Content-Type": "application/json"
 					},
-					body: method === 'GET' ? null : JSON.stringify(data) // Для GET-запросов тело не отправляется
+					body: method !== "GET" ? JSON.stringify(bodyObject) : null
 				})
-				.then(response => {
-					// Проверка на ошибку CORS
-					if (response.status === 0) {
-						statusElement.textContent = 'Status: CORS Error - Forbidden';
-						consoleElement.textContent = 'Error: CORS policy blocked the request';
-					} else {
-						statusElement.textContent = 'Status: ' + response.status;
-						return response.json();
-					}
-				})
+				.then(response => response.json())
 				.then(data => {
-					consoleElement.textContent = 'Response: ' + JSON.stringify(data, null, 2);
+					const successElement = document.createElement('div');
+					successElement.classList.add('status-output');
+					successElement.textContent = 'Response: ' + JSON.stringify(data);
+					consoleElement.appendChild(successElement);
 				})
 				.catch(error => {
-					consoleElement.textContent = 'Error: ' + error;
-					statusElement.textContent = 'Status: Error';
+					const errorElement = document.createElement('div');
+					errorElement.classList.add('status-output');
+					errorElement.textContent = 'Error: ' + error.message;
+					consoleElement.appendChild(errorElement);
 				});
 			}
 		</script>
-		</div>`
+		`
+
+		html += `</div>`
 	}
 
-	html += `</body></html>`
+	html += `
+</body>
+</html>`
 
-	// Записываем HTML в файл
 	_, err = file.WriteString(html)
 	if err != nil {
-		return fmt.Errorf("failed to write HTML content to file: %v", err)
+		return fmt.Errorf("failed to write HTML content: %v", err)
 	}
 
 	return nil
