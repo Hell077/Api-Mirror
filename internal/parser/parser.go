@@ -13,14 +13,28 @@ type APIConfig struct {
 }
 
 type APIMirror struct {
+	SERVER  string         `yaml:"SERVER"`
+	PORT    string         `yaml:"PORT"`
 	APIList map[string]API `yaml:"API_LIST"`
 }
 
 type API struct {
-	Address   string         `yaml:"address"`
-	Method    string         `yaml:"method"`
-	Responses map[int]string `yaml:"responses"` // Убираем `,inline`
-	Title     string         `yaml:"title"`
+	Address    string           `yaml:"address"`
+	Method     string           `yaml:"method"`
+	Fields     map[string]Field `yaml:"fields"`
+	Responses  map[int]string   `yaml:"responses"`
+	Title      string           `yaml:"title"`
+	Parameters map[string]Param `yaml:"parameters"` // Новое поле для параметров
+}
+
+type Field struct {
+	Type string `yaml:"type"`
+	Mask string `yaml:"mask"`
+}
+
+type Param struct {
+	Type        string `yaml:"type"`        // Тип параметра, например, "int", "string"
+	Placeholder string `yaml:"placeholder"` // Значение по умолчанию или описание для заполнителя, как {user_id}
 }
 
 func ParseYAML(filepath string) (*APIConfig, error) {
@@ -35,8 +49,6 @@ func ParseYAML(filepath string) (*APIConfig, error) {
 	if err := yaml.Unmarshal(data, &config); err != nil {
 		return nil, fmt.Errorf("error parsing YAML: %v", err)
 	}
-
-	// Дополнительная проверка структуры
 	fmt.Printf("Parsed YAML content: %+v\n", config)
 
 	if err := validateConfig(&config); err != nil {
@@ -63,6 +75,14 @@ func validateConfig(config *APIConfig) error {
 		}
 		if api.Title == "" {
 			return fmt.Errorf("API '%s' is missing the mandatory field 'title'", name)
+		}
+		if len(api.Parameters) > 0 {
+			// Валидируем параметры, если они есть
+			for paramName, param := range api.Parameters {
+				if param.Type == "" {
+					return fmt.Errorf("API '%s' parameter '%s' is missing 'type'", name, paramName)
+				}
+			}
 		}
 	}
 	return nil
