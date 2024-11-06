@@ -133,7 +133,7 @@ Dieser Befehl generiert eine HTML-Dokumentation basierend auf der Konfigurations
 
 - Stellen Sie sicher, dass die Konfigurationsdatei ordnungsgemäß eingerichtet ist, bevor Sie den Server ausführen.
     - Sie können verschiedene Flags und Befehlszeilenparameter verwenden, um das Verhalten des Programms anzupassen.
-    - Wenn Sie auf Fehler oder Probleme stoßen, wenden Sie sich an den Support auf der [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror/issues) Repository.
+    - Wenn Sie auf Fehler oder Probleme stoßen, wenden Sie sich an den Support auf der [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror-/issues) Repository.
 
 ---
 
