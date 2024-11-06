@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Hell077/Api-Mirror/internal/parser"
 	"os"
+	"sort"
 )
 
 func Generator(config *parser.APIConfig, outputFileName string) error {
@@ -134,6 +135,22 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
             margin-top: 10px;
             font-size: 14px;
         }
+        .status-200 {
+            background-color: #2ecc71; /* Зеленый для успешного ответа */
+            color: white;
+        }
+        .status-400 {
+            background-color: #e74c3c; /* Красный для ошибок клиента */
+            color: white;
+        }
+        .status-500 {
+            background-color: #f39c12; /* Оранжевый для ошибок сервера */
+            color: white;
+        }
+        .status-other {
+            background-color: #7f8c8d; /* Серая для других кодов */
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -176,9 +193,20 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 		html += fmt.Sprintf(`<button class="api-button" type="button" onclick="sendRequest('%s', '%s', '%s')">Send Request</button>`, baseURL+api.Address, api.Method, uniqueID)
 
 		html += `<div class="response-statuses"><strong>Response Statuses:</strong><ul>`
-		for status, response := range api.Responses {
-			html += fmt.Sprintf(`<li><span class="response-status">%d: %s</span></li>`, status, response)
+
+		// Сортируем статус коды от 200 до 500
+		statuses := make([]int, 0, len(api.Responses))
+		for status := range api.Responses {
+			statuses = append(statuses, status)
 		}
+		sort.Slice(statuses, func(i, j int) bool {
+			return statuses[i] < statuses[j]
+		})
+
+		for _, status := range statuses {
+			html += fmt.Sprintf(`<li><span class="response-status">%d: %s</span></li>`, status, api.Responses[status])
+		}
+
 		html += `</ul></div>`
 		html += `</div>`
 
@@ -217,39 +245,32 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 
     fetch(url, {
         method: method,
+        body: JSON.stringify(bodyObject),
         headers: {
-            "Content-Type": "application/json"
-        },
-        body: method !== "GET" ? JSON.stringify(bodyObject) : null
+            'Content-Type': 'application/json'
+        }
     })
     .then(response => response.json())
     .then(data => {
-        const successElement = document.createElement('div');
-        successElement.classList.add('status-output');
-        successElement.textContent = 'Response: ' + JSON.stringify(data);
-        consoleElement.appendChild(successElement);
+        statusElement.textContent = 'Response received: ' + JSON.stringify(data);
+        statusElement.style.color = '#2ecc71'; // Зеленый цвет для успешного ответа
     })
     .catch(error => {
-        const errorElement = document.createElement('div');
-        errorElement.classList.add('status-output');
-        errorElement.textContent = 'Error: ' + error.message;
-        consoleElement.appendChild(errorElement);
+        statusElement.textContent = 'Error: ' + error.message;
+        statusElement.style.color = '#e74c3c'; // Красный цвет для ошибки
     });
 }
-
-		</script>
-		`
+		</script>`
 
 		html += `</div>`
 	}
 
-	html += `
-</body>
+	html += `</body>
 </html>`
 
 	_, err = file.WriteString(html)
 	if err != nil {
-		return fmt.Errorf("failed to write HTML content: %v", err)
+		return fmt.Errorf("failed to write HTML content to file: %v", err)
 	}
 
 	return nil
