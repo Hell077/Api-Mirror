@@ -134,7 +134,7 @@ This command will generate HTML documentation based on the configuration file `a
 
 - Ensure that the configuration file is properly set up before running.
     - You can use various flags and command-line parameters to customize the program's behavior.
-    - If you encounter any errors or issues, contact support at the [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror/issues) repository.
+    - If you encounter any errors or issues, contact support at the [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror-/issues) repository.
 
 ---
 
