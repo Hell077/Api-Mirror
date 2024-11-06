@@ -21,7 +21,7 @@
 
 ### Schritt 1: Die neueste Version herunterladen
 
-Um **Api-Mirror** zu installieren, laden Sie die neueste Version von der [GitHub-Veröffentlichung](https://github.com/Hell077/Api-Mirror/releases) herunter. Gehen Sie zum Link und wählen Sie die entsprechende Datei für Ihr Betriebssystem (Windows, Linux, macOS) aus.
+Um **Api-Mirror** zu installieren, laden Sie die neueste Version von der [GitHub-Veröffentlichung](https://github.com/Hell077/Api-Mirror-/releases) herunter. Gehen Sie zum Link und wählen Sie die entsprechende Datei für Ihr Betriebssystem (Windows, Linux, macOS) aus.
 
 ### Schritt 2: Hinzufügen zum PATH (Windows)
 
