@@ -21,7 +21,7 @@
 
 ### Schritt 1: Die neueste Version herunterladen
 
-Um **Api-Mirror** zu installieren, laden Sie die neueste Version von der [GitHub-Veröffentlichung](https://github.com/Hell077/Api-Mirror-/releases) herunter. Gehen Sie zum Link und wählen Sie die entsprechende Datei für Ihr Betriebssystem (Windows, Linux, macOS) aus.
+Um **Api-Mirror** zu installieren, laden Sie die neueste Version von der [GitHub-Veröffentlichung](https://github.com/Hell077/Api-Mirror/releases) herunter. Gehen Sie zum Link und wählen Sie die entsprechende Datei für Ihr Betriebssystem (Windows, Linux, macOS) aus.
 
 ### Schritt 2: Hinzufügen zum PATH (Windows)
 
@@ -133,13 +133,13 @@ Dieser Befehl generiert eine HTML-Dokumentation basierend auf der Konfigurations
 
 - Stellen Sie sicher, dass die Konfigurationsdatei ordnungsgemäß eingerichtet ist, bevor Sie den Server ausführen.
     - Sie können verschiedene Flags und Befehlszeilenparameter verwenden, um das Verhalten des Programms anzupassen.
-    - Wenn Sie auf Fehler oder Probleme stoßen, wenden Sie sich an den Support auf der [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror-/issues) Repository.
+    - Wenn Sie auf Fehler oder Probleme stoßen, wenden Sie sich an den Support auf der [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror/issues) Repository.
 
 ---
 
 ## 🔗 Links
 
-- **Releases**: [Laden Sie die neueste Version herunter](https://github.com/Hell077/Api-Mirror-/releases)
-- **GitHub-Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror-)
+- **Releases**: [Laden Sie die neueste Version herunter](https://github.com/Hell077/Api-Mirror/releases)
+- **GitHub-Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror)
 
 
