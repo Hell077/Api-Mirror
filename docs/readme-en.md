@@ -24,7 +24,7 @@ Here is the translated documentation in English and German.
 
 ### Step 1: Download the Latest Version
 
-To install **Api-Mirror**, download the latest version from the [GitHub Release](https://github.com/Hell077/Api-Mirror-/releases). Go to the link and select the appropriate file for your operating system (Windows, Linux, macOS).
+To install **Api-Mirror**, download the latest version from the [GitHub Release](https://github.com/Hell077/Api-Mirror/releases). Go to the link and select the appropriate file for your operating system (Windows, Linux, macOS).
 
 ### Step 2: Add to PATH (Windows)
 
@@ -134,13 +134,13 @@ This command will generate HTML documentation based on the configuration file `a
 
 - Ensure that the configuration file is properly set up before running.
     - You can use various flags and command-line parameters to customize the program's behavior.
-    - If you encounter any errors or issues, contact support at the [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror-/issues) repository.
+    - If you encounter any errors or issues, contact support at the [Api-Mirror Issues](https://github.com/Hell077/Api-Mirror/issues) repository.
 
 ---
 
 ## 🔗 Links
 
-- **Releases**: [Download the latest version](https://github.com/Hell077/Api-Mirror-/releases)
-- **GitHub Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror-)
+- **Releases**: [Download the latest version](https://github.com/Hell077/Api-Mirror/releases)
+- **GitHub Repository**: [https://github.com/Hell077/Api-Mirror](https://github.com/Hell077/Api-Mirror)
 
 
