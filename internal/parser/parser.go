@@ -97,13 +97,15 @@ func validateConfig(config *APIConfig) error {
 			}
 		}
 
-		// Валидация полей API
-		if len(api.Fields) > 0 {
+		// Валидация полей API, если метод не GET
+		if api.Method != "GET" && len(api.Fields) > 0 {
 			for fieldName, field := range api.Fields {
 				if field.Type == "" {
 					return fmt.Errorf("API '%s' field '%s' is missing 'type'", name, fieldName)
 				}
 			}
+		} else if api.Method == "GET" && len(api.Fields) > 0 {
+			return fmt.Errorf("API '%s' should not have 'fields' for method GET", name)
 		}
 	}
 	return nil
