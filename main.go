@@ -10,19 +10,19 @@ import (
 )
 
 func main() {
-	path := flag.String("path", "", "path to file to mirror")
-	port := flag.Int("port", 0, "Порт для запуска сервера (0 для случайного)")
+	path := flag.String("path", "", "path to the file to mirror")
+	port := flag.Int("port", 0, "Port to run the server (0 for a random one)")
 
 	flag.Parse()
 
 	config, err := parser.ParseYAML(*path)
 	if err != nil {
-		fmt.Println("Ошибка:", err)
+		fmt.Println("Error:", err)
 		return
 	}
 
 	if err := generator.Generator(config, "api_documentation.html"); err != nil {
-		fmt.Println("Ошибка генерации HTML:", err)
+		fmt.Println("Error generating HTML:", err)
 		return
 	}
 
@@ -30,20 +30,20 @@ func main() {
 		var err error
 		*port, err = server.FindFreePort()
 		if err != nil {
-			fmt.Println("Ошибка нахождения свободного порта:", err)
+			fmt.Println("Error finding a free port:", err)
 			return
 		}
 	}
 
 	htmlContent, err := os.ReadFile("api_documentation.html")
 	if err != nil {
-		fmt.Println("Ошибка чтения HTML файла:", err)
+		fmt.Println("Error reading HTML file:", err)
 		return
 	}
 
 	srv := &server.Server{}
 	if err := srv.StartServer(*port, string(htmlContent)); err != nil {
-		fmt.Println("Ошибка запуска сервера:", err)
+		fmt.Println("Error starting server:", err)
 		return
 	}
 

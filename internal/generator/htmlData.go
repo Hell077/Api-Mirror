@@ -253,38 +253,6 @@ pre {
 `
 }
 
-func generateParametersHTML(parameters map[string]parser.Param, uniqueID string) string {
-	html := `<fieldset class="api-parameters"><legend>Parameters (in URL):</legend><form id="params-` + uniqueID + `">`
-	html += `<ul class="parameter-list">`
-	for paramName, param := range parameters {
-		html += fmt.Sprintf(`
-			<li class="parameter-item">
-				<label for="%s" class="parameter-name">%s:</label>
-				<span class="parameter-type">Type: %s</span>
-				<input type="text" id="%s" name="%s" placeholder="Enter %s" class="parameter-input"/>
-			</li>
-		`, paramName, paramName, param.Type, paramName, paramName, paramName)
-	}
-	html += `</ul></form></fieldset>`
-	return html
-}
-
-func generateFieldsHTML(fields map[string]parser.Field, uniqueID string) string {
-	html := `<fieldset class="api-fields"><legend>Fields (in body):</legend><form id="fields-` + uniqueID + `">`
-	html += `<ul class="field-list">`
-	for fieldName, field := range fields {
-		html += fmt.Sprintf(`
-			<li class="field-item">
-				<label for="%s" class="field-name">%s:</label>
-				<span class="field-type">Type: %s</span>
-				<input type="text" id="%s" name="%s" placeholder="Enter %s" class="field-input"/>
-			</li>
-		`, fieldName, fieldName, field.Type, fieldName, fieldName, fieldName)
-	}
-	html += `</ul></form></fieldset>`
-	return html
-}
-
 func GetSortStatus(responses map[int]string) string {
 	var html string
 	statuses := make([]int, 0, len(responses))
@@ -304,86 +272,57 @@ func GetSortStatus(responses map[int]string) string {
 }
 func SendScript() string {
 	return `
-      <script>
-async function sendRequest(url, method, uniqueID) {
-    const consoleOutput = document.getElementById(uniqueID + "-console-output");
-    consoleOutput.innerHTML = "<pre>Status: Pending...</pre>";
-    updateConsoleOutput(uniqueID, 'pending'); // Ожидание запроса
-    
-    const formData = new FormData(document.getElementById(uniqueID + '-form'));
-    let options = {
-        method: method,
-        headers: {}
-    };
+	<script>
+		function sendRequest(url, method, formID) {
+			const form = document.getElementById(formID + '-form');
+			const inputs = form.getElementsByTagName('input');
 
-    if (method === "GET") {
-        const userId = formData.get('user_id'); 
-        if (userId) {
-            url = url.replace("{user_id}", userId); 
-        } else {
-            consoleOutput.innerHTML = "<pre>Error: user_id is required for GET request.</pre>";
-            updateConsoleOutput(uniqueID, 'error'); // Ошибка в GET запросе
-            return;
-        }
-    } else {
-        options.body = JSON.stringify(Object.fromEntries(formData.entries()));
-        options.headers['Content-Type'] = 'application/json';
-    }
+			// Замена плейсхолдеров параметров в URL
+			let requestUrl = url;
+			for (let input of inputs) {
+				const placeholder = '{' + input.name + '}';
+				requestUrl = requestUrl.replace(placeholder, input.value || input.placeholder);
+			}
 
-    try {
-        const response = await fetch(url, options);
-
-        if (!response.ok) {
-            throw new Error("Request failed with status " + response.status);
-        }
-
-        const result = await response.json();
-        
-        // Проверяем, что сервер вернул ответ в формате JSON
-        if (result) {
-            consoleOutput.innerHTML = "<pre>Response: " + JSON.stringify(result, null, 2) + "</pre>";
-            updateConsoleOutput(uniqueID, 'success', result); // Выводим ответ от сервера
-        } else {
-            consoleOutput.innerHTML = "<pre>Response: No JSON response received.</pre>";
-            updateConsoleOutput(uniqueID, 'error'); // Ошибка в формате ответа
-        }
-
-    } catch (error) {
-        console.error("Error:", error);
-
-        if (error.message.includes("Failed to fetch")) {
-            consoleOutput.innerHTML = "<pre>Error: The server is unreachable or CORS policy blocked the request.</pre>";
-            updateConsoleOutput(uniqueID, 'error'); // Ошибка при доступе
-        } else if (error.message.includes("NetworkError") || error.message.includes("ERR_CONNECTION_REFUSED")) {
-            consoleOutput.innerHTML = "<pre>Error: Failed to connect to the server. Please check the server status or your network connection.</pre>";
-            updateConsoleOutput(uniqueID, 'error'); // Ошибка сети
-        } else {
-            consoleOutput.innerHTML = "<pre>Error: " + error.message + "</pre>";
-            updateConsoleOutput(uniqueID, 'error'); // Обработка других ошибок
-        }
-    }
+			// Настройка и отправка запроса
+			fetch(requestUrl, {
+				method: method,
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: method === 'GET' ? null : JSON.stringify(Object.fromEntries(new FormData(form)))
+			})
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById(formID + '-console-output').innerText = 'Response: ' + data;
+			})
+			.catch(error => {
+				document.getElementById(formID + '-console-output').innerText = 'Error: ' + error;
+			});
+		}
+	</script>`
 }
 
-function updateConsoleOutput(uniqueID, status, response = null) {
-    var consoleElement = document.getElementById(uniqueID + '-console-output');
-    if (!consoleElement) return;
-
-    if (status === 'pending') {
-        consoleElement.style.color = 'yellow';
-        consoleElement.innerText = 'Pending...';
-    } else if (status === 'success') {
-        consoleElement.style.color = 'green';
-        if (response) {
-            consoleElement.innerHTML = "<pre>" + JSON.stringify(response, null, 2) + "</pre>";
-        }
-    }else if (status === 'error') {
-        consoleElement.style.color = 'red';
-
-        if (response) {
-            consoleElement.innerText =   response;
-        }
-    }
+func generateParametersHTML(parameters map[string]parser.Param, uniqueID string) string {
+	html := `<div class="parameters">`
+	for name, param := range parameters {
+		html += fmt.Sprintf(
+			`<div class="parameter"><label for="%s-%s">%s (%s):</label><input type="text" id="%s-%s" name="%s" placeholder="%s"></div>`,
+			uniqueID, name, name, param.Type, uniqueID, name, name, param.Placeholder,
+		)
+	}
+	html += `</div>`
+	return html
 }
-</script>
-    `
+
+func generateFieldsHTML(fields map[string]parser.Field, uniqueID string) string {
+	html := `<div class="fields">`
+	for name, field := range fields {
+		html += fmt.Sprintf(
+			`<div class="field"><label for="%s-%s">%s (%s):</label><input type="text" id="%s-%s" name="%s" placeholder="%s"></div>`,
+			uniqueID, name, name, field.Type, uniqueID, name, name, field.Mask,
+		)
+	}
+	html += `</div>`
+	return html
 }

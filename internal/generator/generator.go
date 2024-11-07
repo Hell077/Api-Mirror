@@ -2,10 +2,12 @@ package generator
 
 import (
 	"fmt"
-	"github.com/Hell077/Api-Mirror/internal/parser"
 	"os"
+
+	"github.com/Hell077/Api-Mirror/internal/parser"
 )
 
+// Generator генерирует HTML файл на основе конфигурации API
 func Generator(config *parser.APIConfig, outputFileName string) error {
 	file, err := os.Create(outputFileName)
 	if err != nil {
@@ -17,25 +19,33 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 
 	html := htmlDocStart()
 	html += fmt.Sprintf(`<div>Url: %s </div>`, baseURL)
+
 	for index, api := range config.APIMirror.APIList {
 		uniqueID := fmt.Sprintf("%s-%d", api.Title, index)
 		html += `<div class="api-container">`
-		html += fmt.Sprintf(`<form id="%s-form" method="%s">`, uniqueID, api.Method) // id формы
+
+		html += fmt.Sprintf(`<form id="%s-form" method="%s">`, uniqueID, api.Method)
 		html += `<div class="api-details">`
 		html += fmt.Sprintf(`<div class="api-title">%s</div>`, api.Title)
 		html += fmt.Sprintf(`<div class="api-address">Address: %s</div>`, api.Address)
 		html += fmt.Sprintf(`<div class="api-method">Method: %s</div>`, api.Method)
-		// URL Params render
+
+		// Рендеринг параметров URL как input-поля
 		if len(api.Parameters) > 0 {
 			html += generateParametersHTML(api.Parameters, uniqueID)
 		}
-		// Body fields render
+
+		// Рендеринг полей тела запроса
 		if len(api.Fields) > 0 {
 			html += generateFieldsHTML(api.Fields, uniqueID)
 		}
-		html += fmt.Sprintf(`<button class="api-button" type="button" onclick="sendRequest('%s', '%s', '%s')">Send Request</button>`, baseURL+api.Address, api.Method, uniqueID)
+
+		// JavaScript вызов sendRequest с URL и параметрами формы
+		html += fmt.Sprintf(
+			`<button class="api-button" type="button" onclick="sendRequest('%s', '%s', '%s')">Send Request</button>`,
+			baseURL+api.Address, api.Method, uniqueID,
+		)
 		html += `<ul class="response-status-list">` + GetSortStatus(api.Responses) + `</ul>`
-		// Console output div for this form
 		html += fmt.Sprintf(`<div id="%s-console-output" class="console-output"></div>`, uniqueID)
 		html += `</div>`
 		html += `</form>`
@@ -43,11 +53,6 @@ func Generator(config *parser.APIConfig, outputFileName string) error {
 	}
 
 	html += SendScript()
-
-	html += `
-	
-	`
-
 	html += `</body></html>`
 
 	_, err = file.WriteString(html)
